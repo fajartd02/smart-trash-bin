@@ -5,8 +5,8 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 
-#define WIFI_SSID       "ARDUINO"
-#define WIFI_PASSWORD   "12345678"
+#define WIFI_SSID       "AndroidAP" // change with your wifi(should same with your laptop)
+#define WIFI_PASSWORD   "idpg4761" // change with your wifi(should same with your laptop)
 #define echoPinSensor1  16
 #define echoPinSensor2  18
 #define trigPinSensor1  4
@@ -49,7 +49,15 @@ void connectWifi() {
 }
 
 void postHttp() {
-  String url = "http://192.168.168.125:5000/add";
+  /* 
+    How url works:
+    Use same wifi for arduino and your laptop/pc
+    Use your IPv4 Address on properties
+    And change the IP before :5000
+    let say your ip4 is 192.55.55.1
+    you should change to http://192.55.55.1:5000/add
+  */
+  String url = "http://192.168.43.226:5000/add";
   WiFiClient client;
   HTTPClient http;  
   String response;
@@ -61,7 +69,10 @@ void postHttp() {
   String result = String(resultSensor);
   buff["range"] = result;
   serializeJson(buff, jsonParams);
-  Serial.println(jsonParams);
+  float percent = (15 - resultSensor) * 100 / 15;
+  Serial.print("sensor1: ");
+  Serial.print(percent);
+  Serial.println("%");
 
   http.begin(client, url);
   http.addHeader("Content-Type", "application/json");

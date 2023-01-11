@@ -8,14 +8,14 @@ const PORT = 5000;
 
 try {
     await db.authenticate();
-    // await Ranges.sync();
+    await Ranges.sync();
     console.log("Database connected");
 
 } catch(err) {
     console.log(err);
 }
 
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(cors({ credentials: true, origin: '*' }));
 app.use(express.json());
 
 app.get("/hello", async(req, res) => {
