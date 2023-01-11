@@ -49,7 +49,7 @@ void connectWifi() {
 }
 
 void postHttp() {
-  String url = "http://192.168.5.125:5000/add";
+  String url = "http://192.168.168.125:5000/add";
   WiFiClient client;
   HTTPClient http;  
   String response;
@@ -71,24 +71,34 @@ void postHttp() {
 }
 
 void setup() {
-  Serial.begin(9600); // Port monitoring: 9600
-  pinMode(trigPinSensor1, OUTPUT); // Sets the first sensor trigPin as an Output
-  pinMode(echoPinSensor1, INPUT); // Sets the first sensor echoPin as an Input
-  connectWifi(); // function for connect to the wifi (use fajar phone's wifi)
+  servoMotor.attach(SERVO_PIN);
+  servoMotor.write(0);
+  Serial.begin(9600);
+  pinMode(trigPinSensor1, OUTPUT);
+  pinMode(echoPinSensor1, INPUT);
+  pinMode(trigPinSensor2, OUTPUT);
+  pinMode(echoPinSensor2, INPUT);
+  connectWifi();
 }
 
 void automaticOpen() {
   float resultSensor = range_result(trigPinSensor2, echoPinSensor2);
-  if (resultSensor <= 4) {
-    servoMotor.write(90);
-    delay(2000);
+  Serial.print("sensor2: ");
+  Serial.print(resultSensor);
+  Serial.println(" cm");
+  if (resultSensor <= 10) {
+    delay(1000);
+    servoMotor.write(120);
+    delay(1000);
+  } else {
+    delay(1000);
     servoMotor.write(0);
-    delay(2000);
+    delay(1000);
   }
 }
 
 void loop() {
-  delay(2000);
-  postHttp();
+  delay(1000);
   automaticOpen();
+  postHttp();
 }
